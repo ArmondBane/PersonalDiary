@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Личный дневник</string>
+    <string name="main_title">Личный дневник</string>
+    <string name="click_me">Click me!</string>
+    <string name="note_title">Note Title</string>
+    <string name="note_date">note date</string>
+    <string name="menu_item_add">Добавить запись</string>
+    <string name="manu_item_delete">Удалить записи</string>
+    <string name="noteitem_date">date</string>
+    <string name="noteitem_category">category</string>
+    <string name="noteitem_title">Title</string>
+    <string name="delete_check_box"></string>
+</resources>
