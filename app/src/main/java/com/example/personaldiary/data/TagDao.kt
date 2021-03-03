@@ -10,11 +10,11 @@ interface TagDao {
     fun getTagList(): Flow<List<Tag>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(note: Tag)
+    suspend fun insert(tag: Tag)
 
     @Update
-    suspend fun update(note:Tag)
+    suspend fun update(tag: Tag)
 
     @Delete
-    suspend fun delete(note:Tag)
+    suspend fun delete(tag: Tag)
 }
