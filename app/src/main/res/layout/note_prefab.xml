@@ -17,12 +17,13 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
         android:layout_toStartOf="@+id/deleteCheckBox"
         android:layout_toLeftOf="@+id/deleteCheckBox"
         android:ellipsize="end"
         android:text="@string/note_title"
         android:textColor="@color/text"
-        android:textSize="24sp">
+        android:textSize="22sp">
     </TextView>
 
     <TextView
@@ -36,10 +37,27 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_toStartOf="@+id/deleteCheckBox"
         android:layout_toLeftOf="@+id/deleteCheckBox"
         android:text="@string/note_date"
+        android:textColor="@color/light_text" />
+
+    <TextView
+        android:id="@+id/noteTagsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noteDateText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toStartOf="@+id/deleteCheckBox"
+        android:layout_toLeftOf="@+id/deleteCheckBox"
+        android:text="@string/note_tags"
         android:textColor="@color/light_text" />
 
     <CheckBox
@@ -52,5 +70,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:text=" "/>
+        android:text=" "
+        android:visibility="invisible" />
 </RelativeLayout>

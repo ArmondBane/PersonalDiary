@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -17,17 +18,25 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
-    fun provideDatabase(app: Application, callback: NoteDatabase.Callback){
-        Room.databaseBuilder(app, NoteDatabase::class.java, "note_database")
+    @Singleton
+    fun provideDatabase(app: Application, callback: NoteDatabase.Callback)
+        = Room.databaseBuilder(app, NoteDatabase::class.java, "note_database")
             .fallbackToDestructiveMigration()
             .addCallback(callback)
             .build()
-    }
 
     @Provides
     fun provideNoteDao(db: NoteDatabase) = db.noteDao()
 
     @Provides
+    fun provideTagDao(db: NoteDatabase) = db.tagDao()
+
+    @ApplicationScope
+    @Provides
     @Singleton
     fun provideApplicationScope() = CoroutineScope(SupervisorJob())
 }
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class ApplicationScope
