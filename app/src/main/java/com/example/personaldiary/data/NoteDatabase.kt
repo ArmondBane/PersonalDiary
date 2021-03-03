@@ -18,7 +18,7 @@ abstract class NoteDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
     abstract fun tagDao(): TagDao
 
-    class Callback @Inject constructor(
+    class  Callback @Inject constructor(
         private val database: Provider<NoteDatabase>,
         @ApplicationScope private val applicationScope: CoroutineScope
     ) : RoomDatabase.Callback() {
@@ -27,12 +27,11 @@ abstract class NoteDatabase : RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
 
-            print("made databse")
-
-            val dao = database.get().noteDao()
+            val noteDao = database.get().noteDao()
+            val tagDao = database.get().tagDao()
 
             applicationScope.launch {
-                dao.insert(Note(
+                noteDao.insert(Note(
                         title = "Начало",
                         text = "Установил ежедневник. Решил, что буду пользоваться системой B-Alert.\n" +
                                 "\n" +
@@ -44,7 +43,7 @@ abstract class NoteDatabase : RoomDatabase() {
                                 "Возникла идея организовать крупный конкурс на блоге.\n" +
                                 "Также думаю, может этим дневником поделиться на блоге? Через месяц, например.",
                         lastDate = LocalDate.of(2012, 5, 20).toEpochDay().toLong()))
-                dao.insert(Note(
+                noteDao.insert(Note(
                         title = "Еще один день",
                         text = "Смотрю онлайн бизнес семинар. Пока не вдохновил, но 14500 онлайн участников – это что-то… Мировой рекорд Гинеса.\n" +
                                 "День прошел по системе B-Alert по книге “Бесцельная жизнь”. Сделал много работы и не устал. Помогает. Кстати, из-за этого я начал ввести личный дневник.\n" +
@@ -53,7 +52,7 @@ abstract class NoteDatabase : RoomDatabase() {
                                 "Серьезную девушку однозначно не хочу. Армия. Не хочу, чтобы меня кто-то ждал. Вернее хочу, но не хочу думать в армии про то, с кем сейчас моя девочка и где она.\n" +
                                 "5:30 – ушел спать.",
                         lastDate = LocalDate.of(2012, 5, 21).toEpochDay().toLong()))
-                dao.insert(Note(
+                noteDao.insert(Note(
                         title = "Жара",
                         text = "Проснулся в 14.00, хотя планировал в 13.00. Заснул накануне только в 6.30 утра. Жара.\n" +
                                 "\n" +
@@ -68,12 +67,17 @@ abstract class NoteDatabase : RoomDatabase() {
                                 "Я еще подумаю… Но, по-моему, я уже пишу что-то лишнее. Ну и пусть. Я не стесняюсь соих желаний.\n" +
                                 "6:51 – ухожу спать.",
                         lastDate = LocalDate.of(2012, 5, 22).toEpochDay().toLong()))
-                dao.insert(Note(
+                noteDao.insert(Note(
                         title = "Отключение воды",
                         text = "Проснулся в 15.00. Отключили горячую воду, суки. Опять мыться в тазике под ковшиком. Снова как будто день уже пролетел. Нужно завязывать с этими гулянками и писать диплом…\n" +
                                 "Домой пришел в 8 утра. С другом познакомились с 2мя симпатичными девушками, ночевали у него дома. В общем, день результативный. Хочу спать, завтра на работу…",
                         lastDate = LocalDate.of(2012, 5, 23).toEpochDay().toLong()))
-
+                tagDao.insert(Tag(
+                        name = "неудачник",
+                        note_id = 4))
+                tagDao.insert(Tag(
+                        name = "девушки",
+                        note_id = 4))
             }
         }
     }
