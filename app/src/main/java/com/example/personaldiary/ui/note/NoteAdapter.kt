@@ -6,10 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personaldiary.data.Note
+import com.example.personaldiary.data.NoteDao
 import com.example.personaldiary.data.TagDao
 import com.example.personaldiary.databinding.NotePrefabBinding
 
-class NoteAdapter : ListAdapter<NoteItem, NoteAdapter.NotesViewHolder>(DiffCallback()) {
+class NoteAdapter() : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         val binding = NotePrefabBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,20 +24,19 @@ class NoteAdapter : ListAdapter<NoteItem, NoteAdapter.NotesViewHolder>(DiffCallb
 
     class NotesViewHolder(private val binding: NotePrefabBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: NoteItem) {
+        fun bind(note: Note) {
             binding.apply {
-                noteTitleText.text = item.note.title
-                noteDateText.text = item.note.createdDateFormatted
-                noteTagsText.text = item.tags.toString()
+                noteTitleText.text = note.title
+                noteDateText.text = note.createdDateFormatted
             }
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<NoteItem>() {
-        override fun areItemsTheSame(oldItem: NoteItem, newItem: NoteItem) =
-                oldItem.note.id == newItem.note.id
+    class DiffCallback : DiffUtil.ItemCallback<Note>() {
+        override fun areItemsTheSame(oldItem: Note, newItem: Note) =
+                oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: NoteItem, newItem: NoteItem) =
-                oldItem.note == newItem.note
+        override fun areContentsTheSame(oldItem: Note, newItem: Note) =
+                oldItem == newItem
     }
 }

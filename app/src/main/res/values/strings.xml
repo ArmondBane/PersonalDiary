@@ -14,5 +14,5 @@
     <string name="action_sort_by_name">Сортировать по имени</string>
     <string name="sort_menu">Сртировка</string>
     <string name="action_search">Поиск</string>
-    <string name="note_tags">Tags</string>
+    <string name="note_tags">Нет тегов</string>
 </resources>
