@@ -16,19 +16,8 @@ class NoteViewModel @ViewModelInject constructor(private val noteDao: NoteDao, p
 
     val searchQuery = MutableStateFlow("")
 
-    private val tasksFlow = searchQuery.flatMapLatest {
-        noteDao.getNoteList(it)
-    }
+    val noteList = searchQuery.flatMapLatest {
+            noteDao.getNoteList(it)
+    }.asLiveData()
 
-    private val noteList = tasksFlow.asLiveData()
-
-    val notes = createNoteItems()
-
-    private fun createNoteItems(): LiveData<List<NoteItem>>{
-        val noteItems: List<NoteItem> = emptyList()
-        noteList.value?.forEach {
-            item -> noteItems.plus(NoteItem(note = item, tags = tagDao.getTagList(item.id).asLiveData().value))
-        }
-        return listOf(noteItems).asFlow().asLiveData()
-    }
 }

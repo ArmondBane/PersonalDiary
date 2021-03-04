@@ -17,7 +17,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class NoteFragment : Fragment(R.layout.note_list_prefab){
 
-    private val viewModel: NoteViewModel by viewModels()
+    private val noteViewModel: NoteViewModel by viewModels()
+    private val tagViewModel: TagViewModel by viewModels()
+    private val noteItemList: MutableList<NoteItem> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,9 +36,16 @@ class NoteFragment : Fragment(R.layout.note_list_prefab){
             }
         }
 
-        viewModel.notes.observe(viewLifecycleOwner) {
-            noteAdapter.submitList(it)
+        noteViewModel.noteList.observe(viewLifecycleOwner) {
+            it.forEach{ item ->
+                noteItemList += NoteItem(note = item, tags = null)
+            }
         }
+        noteItemList.forEach{ item ->
+            item.tags = tagViewModel.getNoteTags(item.note.id)
+        }
+
+        noteAdapter.submitList(noteItemList)
 
         setHasOptionsMenu(true)
     }
@@ -48,7 +57,7 @@ class NoteFragment : Fragment(R.layout.note_list_prefab){
         val searchView = searchItem.actionView as SearchView
 
         searchView.onQueryTextChanged {
-            viewModel.searchQuery.value = it
+            noteViewModel.searchQuery.value = it
         }
     }
 
