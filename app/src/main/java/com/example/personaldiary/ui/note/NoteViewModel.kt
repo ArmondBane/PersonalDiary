@@ -15,6 +15,4 @@ class NoteViewModel @ViewModelInject constructor(private val noteDao: NoteDao, p
     val noteList = searchQuery.flatMapLatest {
         noteDao.getNoteList(it)
     }.asLiveData()
-
-
 }

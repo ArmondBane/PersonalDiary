@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.personaldiary.R
 import com.example.personaldiary.databinding.NoteListPrefabBinding
@@ -19,6 +20,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class NoteFragment : Fragment(R.layout.note_list_prefab){
 
     private val noteViewModel: NoteViewModel by viewModels()
+    private val tagViewModel: TagViewModel by viewModels()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,7 +39,7 @@ class NoteFragment : Fragment(R.layout.note_list_prefab){
         }
 
         noteViewModel.noteList.observe(viewLifecycleOwner) {
-            noteAdapter.submitList(it)
+            noteAdapter.refreshNotes(it, tagViewModel)
         }
 
         setHasOptionsMenu(true)
