@@ -1,7 +1,6 @@
 package com.example.personaldiary.data
 
 import androidx.room.*
-import com.example.personaldiary.ui.note.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 @Dao

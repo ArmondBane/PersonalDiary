@@ -3,6 +3,7 @@ package com.example.personaldiary.data
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
@@ -10,8 +11,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Tag (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String = "5",
-    @ForeignKey(entity = Note::class, parentColumns = ["id"], childColumns = ["note_id"])
+    val name: String = "",
+    @ForeignKey(entity = Note::class, parentColumns = ["id"], childColumns = ["note_id"], onDelete = CASCADE)
     val note_id: Int = 0
 ) : Parcelable {
 }

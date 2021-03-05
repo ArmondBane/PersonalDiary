@@ -2,24 +2,17 @@ package com.example.personaldiary.ui.note
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personaldiary.data.Note
 import com.example.personaldiary.data.Tag
 import com.example.personaldiary.databinding.NotePrefabBinding
-import kotlinx.coroutines.flow.map
 
-class NoteAdapter : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback()) {
+class NoteAdapter(private val listener: OnItemClickListener) : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback()) {
 
     private var noteList: List<Note> = ArrayList()
     private var tagList: MutableList<String> = ArrayList()
-    private var delegate: NoteDelegate? = null
-
-    fun attachDelegate(delegate: NoteDelegate){
-        this.delegate = delegate
-    }
 
     fun setNotes(notes: List<Note>) {
         this.noteList = notes
@@ -40,9 +33,13 @@ class NoteAdapter : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback(
         }
     }
 
+    interface OnItemClickListener{
+        fun onItemClick(note: Note)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         val binding = NotePrefabBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return NotesViewHolder(binding, delegate)
+        return NotesViewHolder(binding)
     }
 
     override fun getItemCount() = noteList.size
@@ -51,7 +48,20 @@ class NoteAdapter : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback(
         holder.bind(noteList[position], tagList[position])
     }
 
-    class NotesViewHolder(private val binding: NotePrefabBinding, val delegate: NoteDelegate?) : RecyclerView.ViewHolder(binding.root) {
+    inner class NotesViewHolder(private val binding: NotePrefabBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.apply {
+                root.setOnClickListener{
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val note = noteList[position]
+                        listener.onItemClick(note)
+                    }
+                }
+            }
+        }
+
         fun bind(note: Note, tags: String) = with(itemView) {
             binding.apply {
                 noteTitleText.text = note.title
