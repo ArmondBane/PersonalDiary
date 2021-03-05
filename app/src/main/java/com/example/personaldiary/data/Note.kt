@@ -17,15 +17,6 @@ data class Note (
         val text: String = "",
         val lastDate: Long = System.currentTimeMillis()
     ) : Parcelable {
-
-    var tags: String = ""
-        get() {
-            return "Нет категории"
-        }
-        set(value) {
-            field = value
-        }
-
     val createdDateFormatted: String
         @RequiresApi(Build.VERSION_CODES.O) get() = LocalDate.ofEpochDay(lastDate).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
 }

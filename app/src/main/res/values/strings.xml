@@ -11,7 +11,7 @@
     <string name="noteitem_title">Title</string>
     <string name="action_delete_notes">Удалить записи</string>
     <string name="action_sort_by_created">Сортировать по дате создания</string>
-    <string name="action_sort_by_name">Сортировать по имени</string>
+    <string name="action_sort_by_tags">Сортировать по тегам</string>
     <string name="sort_menu">Сртировка</string>
     <string name="action_search">Поиск</string>
     <string name="note_tags">Нет тегов</string>

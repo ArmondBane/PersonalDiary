@@ -64,10 +64,12 @@ class NoteFragment : Fragment(R.layout.note_list_prefab){
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.action_sort_by_name -> {
+            R.id.action_sort_by_tags -> {
+                noteViewModel.sortOrder.value = SortOrder.BY_TAGS
                 true
             }
             R.id.action_sort_by_created -> {
+                noteViewModel.sortOrder.value = SortOrder.BY_DATE
                 true
             }
             R.id.action_delete_notes -> {

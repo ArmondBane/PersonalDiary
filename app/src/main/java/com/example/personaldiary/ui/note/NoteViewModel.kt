@@ -12,7 +12,16 @@ class NoteViewModel @ViewModelInject constructor(private val noteDao: NoteDao, p
 
     val searchQuery = MutableStateFlow("")
 
-    val noteList = searchQuery.flatMapLatest {
-        noteDao.getNoteList(it)
+    val sortOrder = MutableStateFlow(SortOrder.BY_DATE)
+
+    val noteList = combine(
+        searchQuery,
+        sortOrder
+    ) { sQ, sO ->
+        Pair(sQ, sO)
+    }.flatMapLatest { (sQ, sO) ->
+        noteDao.getNotes(sQ, sO)
     }.asLiveData()
 }
+
+enum class SortOrder { BY_TAGS, BY_DATE}
