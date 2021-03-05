@@ -7,7 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface TagDao {
 
     @Query("SELECT * FROM tag_table WHERE note_id = :note_id")
-    fun getTagList(note_id: Int): Flow<List<Tag>>
+    fun getTagListByNoteId(note_id: Int): Flow<List<Tag>>
+
+    @Query("SELECT * FROM tag_table")
+    fun getTagList(): Flow<List<Tag>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(tag: Tag)

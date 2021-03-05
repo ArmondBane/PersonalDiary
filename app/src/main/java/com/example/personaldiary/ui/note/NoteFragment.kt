@@ -15,6 +15,7 @@ import com.example.personaldiary.R
 import com.example.personaldiary.databinding.NoteListPrefabBinding
 import com.example.personaldiary.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.observeOn
 
 @AndroidEntryPoint
 class NoteFragment : Fragment(R.layout.note_list_prefab){
@@ -38,9 +39,14 @@ class NoteFragment : Fragment(R.layout.note_list_prefab){
             }
         }
 
-        noteViewModel.noteList.observe(viewLifecycleOwner) {
-            noteAdapter.refreshNotes(it, tagViewModel)
+        noteViewModel.noteList.observe(viewLifecycleOwner) { it1 ->
+            tagViewModel.tagList.observe(viewLifecycleOwner) {
+                noteAdapter.setNotes(it1)
+                noteAdapter.setTags(it)
+            }
         }
+
+
 
         setHasOptionsMenu(true)
     }

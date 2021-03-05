@@ -13,11 +13,9 @@ class TagViewModel @ViewModelInject constructor(private val tagDao: TagDao) : Vi
 
     val searchQueryId = MutableStateFlow(0)
 
-    val tagList = searchQueryId.flatMapLatest {
-        tagDao.getTagList(it)
+    val tagListByNoteId = searchQueryId.flatMapLatest {
+        tagDao.getTagListByNoteId(it)
     }.asLiveData()
 
-    fun getNoteTags(id: Int): Flow<List<Tag>> {
-        return tagDao.getTagList(id)
-    }
+    val tagList = tagDao.getTagList().asLiveData()
 }

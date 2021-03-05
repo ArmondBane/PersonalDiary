@@ -21,7 +21,7 @@ class NoteAdapter : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback(
         this.delegate = delegate
     }
 
-    fun refreshNotes(notes: List<Note>, tagViewModel: TagViewModel) {
+    fun setNotes(notes: List<Note>) {
         this.noteList = notes
         tagList = ArrayList()
         this.noteList.forEach{tagList.add("null")}
@@ -30,15 +30,14 @@ class NoteAdapter : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback(
 
     fun setTags(tags: List<Tag>){
         this.noteList.forEachIndexed{ index, element ->
-            var str = "tags:"
+            var str = ""
             tags.forEach{
                 if (element.id == it.note_id)
-                    str += it.name
+                    str += it.name + " "
             }
-            str += "!"
-            tagList[index] = str
+            if(str != "")
+                tagList[index] = str
         }
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
