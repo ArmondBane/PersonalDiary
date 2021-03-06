@@ -9,6 +9,9 @@ import com.example.personaldiary.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.temporal.ChronoField
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -42,7 +45,7 @@ abstract class NoteDatabase : RoomDatabase() {
                                 "671 место в рейтинге автономных блогов.\n" +
                                 "Возникла идея организовать крупный конкурс на блоге.\n" +
                                 "Также думаю, может этим дневником поделиться на блоге? Через месяц, например.",
-                        lastDate = LocalDate.of(2012, 5, 20).toEpochDay().toLong()))
+                        lastDate = LocalDateTime.of(2012, 5, 20, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()))
                 noteDao.insert(Note(
                         title = "Еще один день",
                         text = "Смотрю онлайн бизнес семинар. Пока не вдохновил, но 14500 онлайн участников – это что-то… Мировой рекорд Гинеса.\n" +
@@ -51,7 +54,7 @@ abstract class NoteDatabase : RoomDatabase() {
                                 "Хм, может тактику полного игнорирования и к красивым девушкам применить? Может количество завтраков у красивых малознакомых девушек возрастет?:)\n" +
                                 "Серьезную девушку однозначно не хочу. Армия. Не хочу, чтобы меня кто-то ждал. Вернее хочу, но не хочу думать в армии про то, с кем сейчас моя девочка и где она.\n" +
                                 "5:30 – ушел спать.",
-                        lastDate = LocalDate.of(2012, 5, 21).toEpochDay().toLong()))
+                        lastDate = LocalDateTime.of(2012, 5, 21, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()))
                 noteDao.insert(Note(
                         title = "Жара",
                         text = "Проснулся в 14.00, хотя планировал в 13.00. Заснул накануне только в 6.30 утра. Жара.\n" +
@@ -66,12 +69,12 @@ abstract class NoteDatabase : RoomDatabase() {
                                 "Пишу все это и думаю: наверное, не буду все это выкладывать на блог, а с другой стороны это плюс к моему рейтингу за открытость, некий пиар.\n" +
                                 "Я еще подумаю… Но, по-моему, я уже пишу что-то лишнее. Ну и пусть. Я не стесняюсь соих желаний.\n" +
                                 "6:51 – ухожу спать.",
-                        lastDate = LocalDate.of(2012, 5, 22).toEpochDay().toLong()))
+                        lastDate = LocalDateTime.of(2012, 5, 22, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()))
                 noteDao.insert(Note(
                         title = "Отключение воды",
                         text = "Проснулся в 15.00. Отключили горячую воду, суки. Опять мыться в тазике под ковшиком. Снова как будто день уже пролетел. Нужно завязывать с этими гулянками и писать диплом…\n" +
                                 "Домой пришел в 8 утра. С другом познакомились с 2мя симпатичными девушками, ночевали у него дома. В общем, день результативный. Хочу спать, завтра на работу…",
-                        lastDate = LocalDate.of(2012, 5, 23).toEpochDay().toLong()))
+                        lastDate = LocalDateTime.of(2012, 5, 23, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()))
                 tagDao.insert(Tag(
                         name = "неудачник",
                         note_id = 4))

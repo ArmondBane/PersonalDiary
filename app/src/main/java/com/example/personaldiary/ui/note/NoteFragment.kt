@@ -7,18 +7,22 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personaldiary.R
 import com.example.personaldiary.data.Note
 import com.example.personaldiary.data.SortOrder
+import com.example.personaldiary.data.Tag
 import com.example.personaldiary.databinding.NoteListPrefabBinding
 import com.example.personaldiary.ui.note.NoteAdapter.OnItemClickListener
+import com.example.personaldiary.util.exhaustive
 import com.example.personaldiary.util.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,6 +65,15 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
                     noteViewModel.onNoteSwiped(note)
                 }
             }).attachToRecyclerView(noteList)
+
+            fabAddNote.setOnClickListener {
+                noteViewModel.onAddNewNoteClick()
+            }
+        }
+
+        setFragmentResultListener("add_edit_request") { _, bundle ->
+            val result = bundle.getInt("add_edit_result")
+            noteViewModel.onAddEditResult(result)
         }
 
         noteViewModel.noteList.observe(viewLifecycleOwner) { it1 ->
@@ -79,7 +92,18 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
                                 noteViewModel.onUndoDeleteClick(event.note)
                             }.show()
                     }
-                }
+                    is NoteViewModel.NoteEvent.NavigateToAddNoteScreen -> {
+                        val action = NoteFragmentDirections.actionNoteFragmentToAddEditNoteFragment(null, null,"Новая запись")
+                        findNavController().navigate(action)
+                    }
+                    is NoteViewModel.NoteEvent.NavigateToEditNoteScreen -> {
+                        val action = NoteFragmentDirections.actionNoteFragmentToAddEditNoteFragment(event.note, event.tags, "Редактирование записи")
+                        findNavController().navigate(action)
+                    }
+                    is NoteViewModel.NoteEvent.ShowNoteSavedConfirmationMassege -> {
+                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                    }
+                }.exhaustive
             }
         }
 
@@ -115,7 +139,7 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
         }
     }
 
-    override fun onItemClick(note: Note) {
-        noteViewModel.onNoteSelected(note)
+    override fun onItemClick(note: Note, tags: Array<Tag>) {
+        noteViewModel.onNoteSelected(note, tags)
     }
 }

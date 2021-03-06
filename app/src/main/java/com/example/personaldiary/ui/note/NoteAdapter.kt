@@ -12,29 +12,32 @@ import com.example.personaldiary.databinding.NotePrefabBinding
 class NoteAdapter(private val listener: OnItemClickListener) : ListAdapter<Note, NoteAdapter.NotesViewHolder>(DiffCallback()) {
 
     private var noteList: List<Note> = ArrayList()
-    private var tagList: MutableList<String> = ArrayList()
+    private var tagsList: MutableList<Array<Tag>> = ArrayList()
 
     fun setNotes(notes: List<Note>) {
         this.noteList = notes
-        tagList = ArrayList()
-        this.noteList.forEach{tagList.add("null")}
+        this.noteList.forEach{
+            tagsList.add(emptyArray())
+        }
         submitList(this.noteList)
     }
 
     fun setTags(tags: List<Tag>){
         this.noteList.forEachIndexed{ index, element ->
-            var str = ""
+
+            var mas = emptyArray<Tag>()
+
             tags.forEach{
                 if (element.id == it.note_id)
-                    str += it.name + " "
+                    mas += it
             }
-            if(str != "")
-                tagList[index] = str
+
+            tagsList[index] = mas
         }
     }
 
     interface OnItemClickListener{
-        fun onItemClick(note: Note)
+        fun onItemClick(note: Note, tags: Array<Tag>)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
@@ -45,7 +48,7 @@ class NoteAdapter(private val listener: OnItemClickListener) : ListAdapter<Note,
     override fun getItemCount() = noteList.size
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        holder.bind(noteList[position], tagList[position])
+        holder.bind(noteList[position], tagsList[position])
     }
 
     inner class NotesViewHolder(private val binding: NotePrefabBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -55,21 +58,28 @@ class NoteAdapter(private val listener: OnItemClickListener) : ListAdapter<Note,
                 root.setOnClickListener{
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
+
                         val note = noteList[position]
-                        listener.onItemClick(note)
+                        val tags = tagsList[position]
+
+                        listener.onItemClick(note, tags)
                     }
                 }
             }
         }
 
-        fun bind(note: Note, tags: String) = with(itemView) {
+        fun bind(note: Note, tags: Array<Tag>) = with(itemView) {
             binding.apply {
                 noteTitleText.text = note.title
                 noteDateText.text = note.createdDateFormatted
-                if (tags == "null")
+                var str = ""
+                tags?.forEach { item ->
+                    str += item.name + " "
+                }
+                if (str == "")
                     noteTagsText.text = "Нет тегов"
                 else
-                    noteTagsText.text = tags
+                    noteTagsText.text = str
             }
         }
     }

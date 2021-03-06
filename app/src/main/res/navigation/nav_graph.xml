@@ -8,6 +8,29 @@
     <fragment
         android:id="@+id/noteFragment"
         android:name="com.example.personaldiary.ui.note.NoteFragment"
-        android:label="note_list_prefab"
-        tools:layout="@layout/note_list_prefab" />
+        android:label="Личный дневник"
+        tools:layout="@layout/note_list_prefab">
+        <action
+            android:id="@+id/action_noteFragment_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditNoteFragment"
+        android:name="com.example.personaldiary.ui.addeditnote.AddEditNoteFragment"
+        android:label="{fragment_title}"
+        tools:layout="@layout/note_editing_view">
+        <argument
+            android:name="note"
+            android:defaultValue="@null"
+            app:argType="com.example.personaldiary.data.Note"
+            app:nullable="true" />
+        <argument
+            android:name="tags"
+            android:defaultValue="@null"
+            app:argType="com.example.personaldiary.data.Tag[]"
+            app:nullable="true" />
+        <argument
+            android:name="fragment_title"
+            app:argType="string" />
+    </fragment>
 </navigation>
