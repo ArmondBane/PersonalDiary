@@ -55,7 +55,7 @@ class NoteViewModel @ViewModelInject constructor(
 
     fun onAddEditResult(result: Int) {
         when (result) {
-            ADD_TASK_RESULT_OK -> showNoteSavedConfirmationMassege("запись добавлена")
+            ADD_TASK_RESULT_OK -> showNoteSavedConfirmationMassege("Запись добавлена")
             EDIT_TASK_RESULT_OK -> showNoteSavedConfirmationMassege("Запись обновлена")
         }
     }

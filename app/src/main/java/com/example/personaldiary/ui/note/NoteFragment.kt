@@ -9,8 +9,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -27,8 +25,6 @@ import com.example.personaldiary.util.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.observeOn
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
@@ -36,12 +32,14 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
     private val noteViewModel: NoteViewModel by viewModels()
     private val tagViewModel: TagViewModel by viewModels()
 
+    private val noteAdapter: NoteAdapter = NoteAdapter(this)
+
+    private lateinit var searchView: SearchView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = NoteListPrefabBinding.bind(view)
-
-        val noteAdapter = NoteAdapter(this)
 
         binding.apply {
             noteList.apply {
@@ -76,10 +74,12 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
             noteViewModel.onAddEditResult(result)
         }
 
-        noteViewModel.noteList.observe(viewLifecycleOwner) { it1 ->
-            tagViewModel.tagList.observe(viewLifecycleOwner) {
-                noteAdapter.setNotes(it1)
-                noteAdapter.setTags(it)
+        
+
+        tagViewModel.tagList.observe(viewLifecycleOwner) { it1 ->
+            noteViewModel.noteList.observe(viewLifecycleOwner) {
+                noteAdapter.setNotes(it)
+                noteAdapter.setTags(it1)
             }
         }
 
@@ -101,7 +101,7 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
                         findNavController().navigate(action)
                     }
                     is NoteViewModel.NoteEvent.ShowNoteSavedConfirmationMassege -> {
-                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                 }.exhaustive
             }
@@ -114,7 +114,13 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
         inflater.inflate(R.menu.menu_fragment_task, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
+
+        val pendingQuery = noteViewModel.searchQuery.value
+        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(pendingQuery, false)
+        }
 
         searchView.onQueryTextChanged {
             noteViewModel.searchQuery.value = it
@@ -141,5 +147,10 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
 
     override fun onItemClick(note: Note, tags: Array<Tag>) {
         noteViewModel.onNoteSelected(note, tags)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
     }
 }

@@ -13,6 +13,6 @@ data class Tag (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String = "",
     @ForeignKey(entity = Note::class, parentColumns = ["id"], childColumns = ["note_id"], onDelete = CASCADE)
-    val note_id: Int = 0
+    var note_id: Int = 0
 ) : Parcelable {
 }

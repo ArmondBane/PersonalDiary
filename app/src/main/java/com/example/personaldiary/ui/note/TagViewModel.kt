@@ -11,11 +11,5 @@ import kotlinx.coroutines.flow.flatMapLatest
 
 class TagViewModel @ViewModelInject constructor(private val tagDao: TagDao) : ViewModel() {
 
-    val searchQueryId = MutableStateFlow(0)
-
-    val tagListByNoteId = searchQueryId.flatMapLatest {
-        tagDao.getTagListByNoteId(it)
-    }.asLiveData()
-
     val tagList = tagDao.getTagList().asLiveData()
 }
