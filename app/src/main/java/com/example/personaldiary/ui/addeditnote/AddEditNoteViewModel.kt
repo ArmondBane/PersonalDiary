@@ -6,6 +6,7 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.personaldiary.data.Note
 import com.example.personaldiary.data.NoteDao
@@ -26,6 +27,10 @@ class AddEditNoteViewModel @ViewModelInject constructor(
 
     val note = state.get<Note>("note")
     var tags = state.get<Array<Tag>>("tags")
+
+    private var toAddTags: MutableList<Tag> = ArrayList()
+    private var toDeleteTags: MutableList<Tag> = ArrayList()
+
     var noteTitle = state.get<String>("noteTitle") ?: note?.title ?: ""
         set(value) {
             field = value
@@ -48,15 +53,39 @@ class AddEditNoteViewModel @ViewModelInject constructor(
 
         if (note != null) {
             val updatedNote = note.copy(title = noteTitle, text = noteText, lastDate = System.currentTimeMillis())
+
+            tags?.plus(toAddTags)
+            val mtags = tags?.toMutableList()
+            mtags?.removeAll(toDeleteTags)
+            tags = mtags?.toTypedArray()
+
+            updateTags()
+
+            state.set("tags", tags)
             updatedNote(updatedNote)
+
         } else {
             val newNote = Note(title = noteTitle, text = noteText)
-            tags?.forEach {
-                it.note_id = newNote.id
-            }
+
+            newNote.id = Math.abs(newNote.hashCode())
+            toAddTags.removeAll(toDeleteTags)
+            toAddTags.forEach { it.note_id = newNote.id }
+            tags = toAddTags.toTypedArray()
+
+            insertTags()
+
             state.set("tags", tags)
             createNote(newNote)
         }
+    }
+
+    private fun updateTags() = viewModelScope.launch {
+        toAddTags?.forEach { tagsDao.insert(it) }
+        toDeleteTags?.forEach { tagsDao.delete(it) }
+    }
+
+    private fun insertTags() = viewModelScope.launch {
+        tags?.forEach { tagsDao.insert(it) }
     }
 
     private fun createNote(newNote: Note) = viewModelScope.launch {
@@ -74,25 +103,22 @@ class AddEditNoteViewModel @ViewModelInject constructor(
     }
 
     private fun createTag(newTag: Tag) = viewModelScope.launch {
-        tagsDao.insert(newTag)
+        toAddTags.add(newTag)
         addEditNoteEventChannel.send(AddEditNoteEvent.CreateNewChipForTag(newTag))
     }
 
-    fun onTagAdd(name: String) = viewModelScope.launch {
+    fun onTagAdd(name: String) {
         if (note != null) {
             val newTag = Tag(name = name, note_id = note.id)
-            tags = tags?.plus(newTag)
-            state.set("tags", tags)
             createTag(newTag)
         } else {
             val newTag = Tag(name = name)
-            tags = tags?.plus(newTag)
             createTag(newTag)
         }
     }
 
-    fun onTagDelete(tag: Tag) = viewModelScope.launch {
-        tagsDao.delete(tag)
+    fun onTagDelete(tag: Tag) {
+        toDeleteTags.add(tag)
     }
 
     sealed class AddEditNoteEvent {

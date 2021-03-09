@@ -25,12 +25,12 @@ import com.example.personaldiary.util.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
 
 @AndroidEntryPoint
 class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
 
     private val noteViewModel: NoteViewModel by viewModels()
-    private val tagViewModel: TagViewModel by viewModels()
 
     private val noteAdapter: NoteAdapter = NoteAdapter(this)
 
@@ -74,13 +74,9 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
             noteViewModel.onAddEditResult(result)
         }
 
-        
-
-        tagViewModel.tagList.observe(viewLifecycleOwner) { it1 ->
-            noteViewModel.noteList.observe(viewLifecycleOwner) {
-                noteAdapter.setNotes(it)
-                noteAdapter.setTags(it1)
-            }
+        noteViewModel.allLists.observe(viewLifecycleOwner) {
+            noteAdapter.setNotes(it.first)
+            noteAdapter.setTags(it.second)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

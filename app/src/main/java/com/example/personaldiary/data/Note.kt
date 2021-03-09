@@ -17,7 +17,7 @@ import java.util.*
 @Entity(tableName = "note_table")
 @Parcelize
 data class Note (
-        @PrimaryKey(autoGenerate = true) val id: Int = 0,
+        @PrimaryKey(autoGenerate = true) var id: Int = 0,
         val title: String = "",
         val text: String = "",
         val lastDate: Long = System.currentTimeMillis()

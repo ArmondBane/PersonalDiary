@@ -15,7 +15,7 @@ interface NoteDao {
     @Query("SELECT * FROM note_table WHERE title LIKE '%' || :searchQuery || '%' ORDER BY lastDate DESC")
     fun getNoteListByLastDate(searchQuery: String): Flow<List<Note>>
 
-    @Query("SELECT * FROM note_table WHERE id = (SELECT note_id FROM tag_table WHERE NAME LIKE '%' || :searchQuery || '%')")
+    @Query("SELECT * FROM note_table WHERE id IN (SELECT note_id FROM tag_table WHERE NAME LIKE '%' || :searchQuery || '%')")
     fun getNoteListByTags(searchQuery: String): Flow<List<Note>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

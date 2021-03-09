@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel @ViewModelInject constructor(
     private val noteDao: NoteDao,
+    private val tagDao: TagDao,
     private val preferencesManager: PreferencesManager,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
@@ -30,6 +31,13 @@ class NoteViewModel @ViewModelInject constructor(
         Pair(sQ, pF)
     }.flatMapLatest { (sQ, pF) ->
         noteDao.getNotes(sQ, pF.sortOrder)
+    }
+
+    val allLists = combine(
+        noteList,
+        tagDao.getTagList()
+    ){ notes, tags ->
+        Pair(notes, tags)
     }.asLiveData()
 
     fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {

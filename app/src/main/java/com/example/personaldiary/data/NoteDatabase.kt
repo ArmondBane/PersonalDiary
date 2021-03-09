@@ -76,11 +76,14 @@ abstract class NoteDatabase : RoomDatabase() {
                                 "Домой пришел в 8 утра. С другом познакомились с 2мя симпатичными девушками, ночевали у него дома. В общем, день результативный. Хочу спать, завтра на работу…",
                         lastDate = LocalDateTime.of(2012, 5, 23, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()))
                 tagDao.insert(Tag(
-                        name = "неудачник",
+                        name = "Неудачник",
                         note_id = 4))
                 tagDao.insert(Tag(
-                        name = "девушки",
+                        name = "Девушки",
                         note_id = 4))
+                tagDao.insert(Tag(
+                        name = "Гавно",
+                        note_id = 2))
             }
         }
     }
