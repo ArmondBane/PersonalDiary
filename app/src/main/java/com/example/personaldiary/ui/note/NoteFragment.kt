@@ -134,9 +134,6 @@ class NoteFragment : Fragment(R.layout.note_list_prefab), OnItemClickListener{
                 noteViewModel.onSortOrderSelected(SortOrder.BY_DATE)
                 true
             }
-            R.id.action_delete_notes -> {
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
