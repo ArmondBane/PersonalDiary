@@ -82,7 +82,7 @@ abstract class NoteDatabase : RoomDatabase() {
                         name = "Девушки",
                         note_id = 4))
                 tagDao.insert(Tag(
-                        name = "Гавно",
+                        name = "Бизнес",
                         note_id = 2))
             }
         }
