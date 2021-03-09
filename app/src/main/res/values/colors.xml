@@ -6,8 +6,8 @@
     <color name="bottom_menu">#4C4C4C</color>
     <color name="other">#292929</color>
     <color name="black">#FF000000</color>
-    <color name="text">#D8000000</color>
-    <color name="light_text">#A3000000</color>
+    <color name="text">#D8131313</color>
+    <color name="light_text">#A33A3A3A</color>
     <color name="white">#FFFFFFFF</color>
     <color name="button">#C51818</color>
 </resources>
