@@ -72,10 +72,10 @@ class AddEditNoteViewModel @ViewModelInject constructor(
             toAddTags.forEach { it.note_id = newNote.id }
             tags = toAddTags.toTypedArray()
 
-            insertTags()
-
-            state.set("tags", tags)
             createNote(newNote)
+            
+            insertTags()
+            state.set("tags", tags)
         }
     }
 
